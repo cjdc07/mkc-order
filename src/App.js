@@ -1,23 +1,28 @@
-import logo from './logo.svg';
+import * as React from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import { Button } from '@mui/material';
+
+
 import './App.css';
+import OrderForm from './routes/OrderForm';
 
 function App() {
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleDialogOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Button variant="outlined" startIcon={<AddIcon />} onClick={handleDialogOpen}>
+        New Order
+      </Button>
+      <OrderForm open={openDialog} onClose={handleDialogClose}  />
     </div>
   );
 }
