@@ -3,7 +3,6 @@ import _ from 'lodash';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
-import RemoveIcon from '@mui/icons-material/RemoveCircleOutline';
 import { 
   Box,
   Button,
@@ -14,27 +13,17 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  IconButton,
   Radio,
   RadioGroup,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
 } from '@mui/material';
 
 import useRequest from '../../hooks/useRequest';
+import ProductOrderTable from './ProductOrderTable';
+import {formatToCurrency} from '../../utils'
 
 const filterOptions = createFilterOptions({
   stringify: ({ code, name }) => `${code} ${name}`
 });
-
-const formatToCurrency = (value) => new Intl.NumberFormat('en-PH', {
-  style: 'currency',
-  currency: 'PHP',
-}).format(value)
 
 const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) => {
   const { getList } = useRequest();
@@ -117,13 +106,6 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
     setProductOrder({ ...productOrder, price, total });
   };
 
-  const totalProductOrderPrice = () => {
-    return productOrders.reduce((acc, { total }) => {
-      acc += total;
-      return acc; 
-    }, 0);
-  };
-
   const editProductOrder = (productOrder) => {
     setSelectedProduct(productOrder.data);
     setProductOrder(productOrder)
@@ -169,73 +151,13 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
           />
         )}
       />
-      <TableContainer sx={{ height: '56vh' }}>
-        <Table stickyHeader size="small" sx={{ width: '100%', paddingTop: 2}}>
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Code</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Qty</TableCell>
-              <TableCell>Total</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {productOrders && productOrders.length > 0 ?
-              <>
-                {productOrders.map((productOrder) => (
-                  <TableRow
-                    key={productOrder.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    onClick={() => editProductOrder(productOrder)}
-                  >
-                    <TableCell>
-                      <IconButton
-                        color="error"
-                        onClick={(e) => removeProductOrder(e, productOrder.id)}
-                        aria-label="close"
-                      >
-                        <RemoveIcon />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>{productOrder.code}</TableCell>
-                    <TableCell>{productOrder.name}</TableCell>
-                    <TableCell>{formatToCurrency(productOrder.price)}</TableCell>
-                    <TableCell>{productOrder.quantity}</TableCell>
-                    <TableCell align="right">{formatToCurrency(productOrder.total)}</TableCell>
-                  </TableRow>
-                ))}
-              </>:
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  <p>No products added yet</p>
-                </TableCell>
-              </TableRow>
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell colSpan={6}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell rowSpan={2} colSpan={3}/>
-            </TableRow>
-            <TableRow sx={{height: 56 }}>
-              <TableCell colSpan={2}>Total</TableCell>
-              <TableCell align="right">
-                {formatToCurrency(totalProductOrderPrice())}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box sx={{ height: '56vh' }}>
+        <ProductOrderTable
+          productOrders={productOrders}
+          editProductOrder={editProductOrder}
+          removeProductOrder={removeProductOrder}
+        />
+      </Box>
       {openProductOrderDialog && selectedProduct &&
         <Dialog
           open={openProductOrderDialog}

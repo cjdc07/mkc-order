@@ -1,11 +1,11 @@
 import * as React from 'react';
 
 const defaultFormValues = {
-  name: '',
-  email: '',
-  contact: '',
+  customerName: '',
+  customerEmail: '',
+  customerContact: '',
   forDelivery: false,
-  address: '',
+  customerAddress: '',
   deliveryDate: new Date(),
   productOrders: null,
 };

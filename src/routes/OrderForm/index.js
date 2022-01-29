@@ -4,7 +4,7 @@ import CustomerInformationForm from './CustomerInformationForm';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import OrderInformationForm from './OrderInformationForm';
 import OrderSummary from './OrderSummary';
-import { AppBar, Box, Button, Dialog, IconButton, MobileStepper, Paper, Slide, Toolbar, Typography, useTheme } from '@mui/material';
+import { AppBar, Box, Button, Dialog, IconButton, MobileStepper, Slide, Toolbar, Typography, useTheme } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import { LocalizationProvider } from '@mui/lab';
 
@@ -47,7 +47,16 @@ const OrderForm = ({ open, onClose }) => {
     },
     {
       label: 'Order Summary',
-      component: <OrderSummary />
+      component:
+        <OrderSummary
+          productOrders={productOrders}
+          customerName={formValues.customerName}
+          customerEmail={formValues.customerEmail}
+          customerContact={formValues.customerContact}
+          customerAddress={formValues.customerAddress}
+          forDelivery={formValues.forDelivery}
+          deliveryDate={formValues.deliveryDate}
+        />
     },
   ];
 
@@ -78,6 +87,7 @@ const OrderForm = ({ open, onClose }) => {
             aria-label="close"
           >
             <CloseIcon />
+            <Typography pl={1}>{steps[activeStep].label}</Typography>
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -85,23 +95,10 @@ const OrderForm = ({ open, onClose }) => {
         height: '100vh',
         width: '100vw',
         display: 'flex',
+        paddingTop: 2,
         flexDirection: 'column',
         justifyContent: 'space-between'
       }}>
-        <Paper
-          square
-          elevation={0}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyItems: 'center',
-            height: 50,
-            pl: 2,
-            bgcolor: 'background.default',
-          }}
-        >
-          <Typography>{steps[activeStep].label}</Typography>
-        </Paper>
         <LocalizationProvider dateAdapter={DateAdapter}>
           <Box sx={{pl: 2, pr: 2, flexGrow: 1}}>
             {steps[activeStep].component}

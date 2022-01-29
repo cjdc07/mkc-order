@@ -18,7 +18,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App" style={{height: '100vh'}}>
       <Button variant="outlined" startIcon={<AddIcon />} onClick={handleDialogOpen}>
         New Order
       </Button>

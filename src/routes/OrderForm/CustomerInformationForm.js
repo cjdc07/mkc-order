@@ -11,41 +11,41 @@ const CustomerInformationForm = ({formErrors, inputChange, formValues}) => {
       required
       autoFocus
       fullWidth
-      error={!!formErrors['name']}
-      helperText={formErrors['name']}
+      error={!!formErrors['customerName']}
+      helperText={formErrors['customerName']}
       margin="normal"
-      id="name"
+      id="customerName"
       label="Customer Name"
       type="text"
       variant="outlined"
       onChange={inputChange}
-      value={formValues['name']}
+      value={formValues['customerName']}
     />
     <TextField
       required
       fullWidth
-      error={!!formErrors['email']}
-      helperText={formErrors['email']}
+      error={!!formErrors['customerEmail']}
+      helperText={formErrors['customerEmail']}
       margin="normal"
-      id="email"
+      id="customerEmail"
       label="Customer Email (Optional)"
       type="text"
       variant="outlined"
       onChange={inputChange}
-      value={formValues['email']}
+      value={formValues['customerEmail']}
     />
     <TextField
       required
       fullWidth
-      error={!!formErrors['contact']}
-      helperText={formErrors['contact']}
+      error={!!formErrors['customerContact']}
+      helperText={formErrors['customerContact']}
       margin="normal"
-      id="contact"
+      id="customerContact"
       label="Customer Contact Number (Optional)"
       type="text"
       variant="outlined"
       onChange={inputChange}
-      value={formValues['contact']}
+      value={formValues['customerContact']}
     />
     <FormControlLabel
       checked={forDelivery}
@@ -66,15 +66,15 @@ const CustomerInformationForm = ({formErrors, inputChange, formValues}) => {
           required
           multiline
           fullWidth
-          error={!!formErrors['address']}
-          helperText={formErrors['address']}
+          error={!!formErrors['customerAddress']}
+          helperText={formErrors['customerAddress']}
           margin="normal"
-          id="address"
+          id="customerAddress"
           label="Customer Address"
           rows={4}
           variant="outlined"
           onChange={inputChange}
-          value={formValues['address']}
+          value={formValues['customerAddress']}
         />
         <DatePicker
           label="Delivery Date"
@@ -84,8 +84,8 @@ const CustomerInformationForm = ({formErrors, inputChange, formValues}) => {
             <TextField
               required
               fullWidth
-              error={!!formErrors['address']}
-              helperText={formErrors['address']}
+              error={!!formErrors['deliveryDate']}
+              helperText={formErrors['deliveryDate']}
               margin="normal"
               variant="outlined"
               {...params}
