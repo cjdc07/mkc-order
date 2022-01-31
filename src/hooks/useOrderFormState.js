@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useRequest from './useRequest';
 
 const defaultFormValues = {
   customerName: '',
@@ -13,6 +14,7 @@ const defaultFormValues = {
 const optionalFields = ['contact', 'email'];
 
 const useOrderFormState = () => {
+  const { create } = useRequest();
   const [productOrders, setProductOrders] = React.useState([]);
   const [formValues, setFormValues] = React.useState(defaultFormValues);
   const [formErrors, setFormErrors] = React.useState({});
@@ -68,6 +70,7 @@ const useOrderFormState = () => {
 
   return {
     addToCart,
+    create,
     formErrors,
     formValues,
     inputChange,

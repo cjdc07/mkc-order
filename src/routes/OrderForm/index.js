@@ -23,6 +23,7 @@ const OrderForm = ({ open, onClose }) => {
     productOrders,
     addToCart,
     removeProductOrder,
+    create,
   } = useOrderFormState();
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -62,8 +63,26 @@ const OrderForm = ({ open, onClose }) => {
 
   const maxSteps = steps.length;
 
-  const handleNext = () => {
-    console.log(formValues);
+  const handleNext = async () => {
+    if (activeStep === maxSteps - 1) {
+      const payload = {
+        customerName: formValues.customerName,
+        customerEmail: formValues.customerEmail,
+        customerContact: formValues.customerContact,
+        customerAddress: formValues.customerAddress,
+        forDelivery: formValues.forDelivery,
+        deliveryDate: formValues.deliveryDate,
+        productOrders: formValues.productOrders.map(
+          ({ id, price, quantity}) => ({ productId: id, price, quantity})
+        ),
+      }
+
+      await create('orders', payload);
+
+      onClose();
+      
+      return;
+    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -113,9 +132,8 @@ const OrderForm = ({ open, onClose }) => {
             <Button
               size="small"
               onClick={handleNext}
-              disabled={activeStep === maxSteps - 1}
             >
-              Next
+              {activeStep === maxSteps - 1 ? 'Finish' : 'Next'}
               {theme.direction === 'rtl' ? (
                 <KeyboardArrowLeft />
               ) : (
