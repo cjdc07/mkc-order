@@ -40,12 +40,13 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
       return undefined;
     }
 
-    const fetchList = async () => {  
+    const fetchList = async () => { 
       try {
         const { data } = await getList('products', {
+          // this loads all products
           pagination: {
-            page: 0, // TODO
-            perPage: 10, // TODO
+            page: 0,
+            perPage: 0,
           },
           sort: {
             field: 'id',
