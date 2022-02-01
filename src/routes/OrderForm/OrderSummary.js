@@ -25,26 +25,30 @@ const OrderSummary = ({
           readOnly: true,
         }}
       />
-      <TextField
-        fullWidth
-        margin="dense"
-        id="customer-email-read-only"
-        label="Customer Email"
-        defaultValue={customerEmail}
-        InputProps={{
-          readOnly: true,
-        }}
-      />
-      <TextField
-        fullWidth
-        margin="dense"
-        id="customer-contact-read-only"
-        label="Customer Contact"
-        defaultValue={customerContact}
-        InputProps={{
-          readOnly: true,
-        }}
-      />
+      {customerEmail && customerEmail !== '' && (
+        <TextField
+          fullWidth
+          margin="dense"
+          id="customer-email-read-only"
+          label="Customer Email"
+          defaultValue={customerEmail}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      )}
+      {customerContact && customerContact !== '' && (
+        <TextField
+          fullWidth
+          margin="dense"
+          id="customer-contact-read-only"
+          label="Customer Contact"
+          defaultValue={customerContact}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      )}
     </Box>
     {forDelivery &&
       <Box p={1}>

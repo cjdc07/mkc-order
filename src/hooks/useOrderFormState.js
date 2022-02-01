@@ -76,6 +76,11 @@ const useOrderFormState = () => {
     setFormValues({ ...formValues, productOrders: updatedProductOrders });
   };
 
+  const clearFields = () => {
+    setProductOrders([]);
+    setFormValues(defaultFormValues);
+  };
+
   return {
     addToCart,
     create,
@@ -86,6 +91,7 @@ const useOrderFormState = () => {
     productOrders,
     removeProductOrder,
     setProductOrders,
+    clearFields,
   }
 }
 

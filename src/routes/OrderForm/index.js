@@ -38,6 +38,7 @@ const OrderForm = ({ open, onClose }) => {
     addToCart,
     removeProductOrder,
     create,
+    clearFields,
   } = useOrderFormState();
   const [activeStep, setActiveStep] = React.useState(0);
   const [openErrorSnackbar, setOpenErrorSnackbar] = React.useState(false);
@@ -81,22 +82,28 @@ const OrderForm = ({ open, onClose }) => {
 
   const handleNext = async () => {
     if (activeStep === maxSteps - 1) {
-      const payload = {
-        customerName: formValues.customerName,
-        customerEmail: formValues.customerEmail,
-        customerContact: formValues.customerContact,
-        customerAddress: formValues.customerAddress,
-        forDelivery: formValues.forDelivery,
-        deliveryDate: formValues.deliveryDate,
-        productOrders: formValues.productOrders.map(
-          ({ id, price, quantity}) => ({ productId: id, price, quantity})
-        ),
+      try {
+        const payload = {
+          customerName: formValues.customerName,
+          customerEmail: formValues.customerEmail,
+          customerContact: formValues.customerContact,
+          customerAddress: formValues.customerAddress,
+          forDelivery: formValues.forDelivery,
+          deliveryDate: formValues.deliveryDate,
+          productOrders: formValues.productOrders.map(
+            ({ id, price, quantity}) => ({ productId: id, price, quantity})
+          ),
+        }
+
+        await create('orders', payload);
+
+        onClose();
+        clearFields();
+        setActiveStep(0);
+      } catch (error) {
+        console.log(error);
       }
 
-      await create('orders', payload);
-
-      onClose();
-      
       return;
     }
 
