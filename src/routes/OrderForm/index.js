@@ -147,7 +147,7 @@ const OrderForm = ({ open, onClose }) => {
         onClose={onClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative' }}>
+        <AppBar sx={{ position: 'fixed' }}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -160,6 +160,7 @@ const OrderForm = ({ open, onClose }) => {
             </IconButton>
           </Toolbar>
         </AppBar>
+        <Toolbar />
         <Box sx={{
           height: '100vh',
           width: '100vw',

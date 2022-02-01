@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRightOutlined';
-import { Button, Card, CardContent, Typography } from '@mui/material';
+import { AppBar, Button, Card, CardContent, Toolbar, Typography } from '@mui/material';
 
 
 import './App.css';
@@ -53,61 +53,70 @@ function App() {
 
   const handleDialogClose = () => {
     setOpenDialog(false);
+    getOrders(); // TODO: inefficient. refactor this
   };
 
   return (
-    <Box sx={{height: '100vh'}}>
-      <Box>
-        <Button variant="outlined" startIcon={<AddIcon />} onClick={handleDialogOpen}>
-          New Order
-        </Button>
-      </Box>
-      {orders && orders.length > 0 &&
-        <>
-          {Object.values(ORDER_STATUS).map((statusName) => {
-            const ordersPerStatus = orders.find(({ status }) => status === statusName)
-            return (
-              <Box key={statusName} p={1}>
-                <Typography color="text.secondary" sx={{marginBottom: 1}}>{statusName}</Typography>
-                <Box sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-                  {ordersPerStatus ?
-                    ordersPerStatus.orders.map(
-                      (order) => (
-                        <Card
-                          key={order._id}
-                          variant="outlined"
-                          sx={{ display: 'flex', margin: 1, width: '40vw' }}
-                        >
-                          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flex:1 }}>
-                            <Box>
-                              <Typography color="text.secondary">Customer Name</Typography>
-                              <Typography>{order.customerName}</Typography>
-                              {order.forDelivery &&
+    <>
+      <AppBar sx={{ position: 'fixed' }}>
+        <Toolbar>
+          <Typography>MKC Order</Typography>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+      <Box pl={2} pr={2}>
+        <Box mt={2} sx={{ display: 'flex', justifyContent: 'end'}}>
+          <Button variant="outlined" startIcon={<AddIcon />} onClick={handleDialogOpen}>
+            New Order
+          </Button>
+        </Box>
+        {orders && orders.length > 0 &&
+          <>
+            {Object.values(ORDER_STATUS).map((statusName) => {
+              const ordersPerStatus = orders.find(({ status }) => status === statusName)
+              return (
+                <Box key={statusName}>
+                  <Typography color="text.secondary" sx={{marginBottom: 1}}>{statusName}</Typography>
+                  <Box sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+                    {ordersPerStatus ?
+                      ordersPerStatus.orders.map(
+                        (order) => (
+                          <Card
+                            key={order._id}
+                            variant="outlined"
+                            sx={{ display: 'flex', margin: 1, width: '40vw' }}
+                          >
+                            <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flex:1 }}>
+                              <Box>
+                                <Typography color="text.secondary">Customer Name</Typography>
+                                <Typography>{order.customerName}</Typography>
+                                {order.forDelivery &&
+                                  <Box mt={1}>
+                                    <Typography color="text.secondary">Delivery Date</Typography>
+                                    <Typography>{formatDate(order.deliveryDate)}</Typography>
+                                  </Box>
+                                }
                                 <Box mt={1}>
-                                  <Typography color="text.secondary">Delivery Date</Typography>
-                                  <Typography>{formatDate(order.deliveryDate)}</Typography>
-                                </Box>
-                              }
-                              <Box mt={1}>
-                                  <Typography color="text.secondary">Created</Typography>
-                                  <Typography>{formatDate(order.createdAt)}</Typography>
-                                </Box>
-                            </Box>
-                            <Box><ArrowCircleRightIcon /></Box>
-                          </CardContent>
-                        </Card>
-                      )
-                    ) : 
-                    <p>Nothing!</p>
-                  }
+                                    <Typography color="text.secondary">Created</Typography>
+                                    <Typography>{formatDate(order.createdAt)}</Typography>
+                                  </Box>
+                              </Box>
+                              <Box><ArrowCircleRightIcon /></Box>
+                            </CardContent>
+                          </Card>
+                        )
+                      ) : 
+                      <p>Nothing!</p>
+                    }
+                  </Box>
                 </Box>
-              </Box>
-            );
-          })}
-        </>
-      }
-      <OrderForm open={openDialog} onClose={handleDialogClose}  />
-    </Box>
+              );
+            })}
+          </>
+        }
+        <OrderForm open={openDialog} onClose={handleDialogClose}  />
+      </Box>
+    </>
   );
 }
 
