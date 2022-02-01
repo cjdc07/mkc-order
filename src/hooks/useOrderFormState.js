@@ -11,7 +11,7 @@ const defaultFormValues = {
   productOrders: null,
 };
 
-const optionalFields = ['customerContact', 'customerEmail'];
+const optionalFields = ['customerContact', 'customerEmail', 'forDelivery'];
 
 const useOrderFormState = () => {
   const { create } = useRequest();
@@ -35,6 +35,12 @@ const useOrderFormState = () => {
 
     if (type === 'checkbox') {
       value = e.target.checked;
+    }
+
+    if (id === 'forDelivery' && !value) {
+      const updatedFormErrors = formErrors;
+      delete updatedFormErrors['customerAddress'];
+      setFormErrors(updatedFormErrors);
     }
 
     if (!optionalFields.includes(id)) {
