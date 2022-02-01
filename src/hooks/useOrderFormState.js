@@ -11,7 +11,7 @@ const defaultFormValues = {
   productOrders: null,
 };
 
-const optionalFields = ['contact', 'email'];
+const optionalFields = ['customerContact', 'customerEmail'];
 
 const useOrderFormState = () => {
   const { create } = useRequest();
@@ -44,7 +44,9 @@ const useOrderFormState = () => {
           [id]: 'This field is required.'
         });
       } else {
-        setFormErrors({...formErrors, [id]: null});
+        const updatedFormErrors = formErrors;
+        delete updatedFormErrors[id];
+        setFormErrors(updatedFormErrors);
       }
     }
 
@@ -72,6 +74,7 @@ const useOrderFormState = () => {
     addToCart,
     create,
     formErrors,
+    setFormErrors,
     formValues,
     inputChange,
     productOrders,

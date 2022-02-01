@@ -78,8 +78,8 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
       code: value.code,
       name: value.name,
       price: value.srp1,
-      quantity: value.quantity,
-      total: value.quantity * value.srp1,
+      quantity: 1,
+      total: 1 * value.srp1,
       data: value,
     })
     handleOpenProductOrderDialog()
