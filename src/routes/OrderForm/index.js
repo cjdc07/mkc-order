@@ -106,7 +106,7 @@ const OrderForm = ({ open, onClose }) => {
         return;
       }
 
-      if (!formValues.customerAddress || formValues.customerAddress === '') {
+      if (formValues.forDelivery && (!formValues.customerAddress || formValues.customerAddress === '')) {
         setFormErrors({...formErrors, customerAddress: 'This field is required.'});
         return;
       }
