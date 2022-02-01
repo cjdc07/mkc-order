@@ -2,6 +2,7 @@ import * as React from 'react';
 import ProductOrderTable from './ProductOrderTable';
 import { Box } from '@mui/system';
 import { TextField, Typography } from '@mui/material';
+import { formatDate } from '../../utils';
 
 const OrderSummary = ({
   productOrders,
@@ -58,13 +59,7 @@ const OrderSummary = ({
           margin="dense"
           id="delivery-date-read-only"
           label="Delivery Date"
-          defaultValue={new Date(deliveryDate).toLocaleString("en", {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric'
-          })}
+          defaultValue={formatDate(deliveryDate)}
           InputProps={{
             readOnly: true,
           }}
