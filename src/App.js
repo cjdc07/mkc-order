@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRightOutlined';
-import { AppBar, Button, Card, CardContent, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import FullScreenDialog from './components/FullScreenDialog';
@@ -21,11 +21,12 @@ const ORDER_STATUS = {
 };
 
 function App() {
-  const { getList } = useRequest();
+  const { getList, update } = useRequest();
   const [selectedOrder, setSelectedOrder] = React.useState(null);
   const [openOrderSummaryDialog, setOpenOrderSummaryDialog] = React.useState(false);
   const [orders, setOrders] = React.useState([]);
-  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openOrderFormDialog, setOpenOrderFormDialog] = React.useState(false);
+  const [openCancelOrderDialog, setOpenCancelOrderDialog] = React.useState(false);
 
   const getOrders = async () => {
     try {
@@ -52,13 +53,38 @@ function App() {
   }, [])
 
   const handleDialogOpen = () => {
-    setOpenDialog(true);
+    setOpenOrderFormDialog(true);
   };
 
   const handleDialogClose = () => {
-    setOpenDialog(false);
+    setOpenOrderFormDialog(false);
     getOrders(); // TODO: inefficient. refactor this
   };
+
+  const handleOrderSummaryDialogClose = () => {
+    setOpenOrderSummaryDialog(false);
+    setSelectedOrder(null);
+  }
+
+  const handleCancelOrderDialogOpen = () => setOpenCancelOrderDialog(true);
+  const handleCancelOrderDialogClose = () => setOpenCancelOrderDialog(false);
+  const cancelOrder = async () => {
+    try {
+      await update(
+        'orders',
+        {
+          ...selectedOrder,
+          id: selectedOrder._id,
+          status: ORDER_STATUS.CANCELLED,
+        },
+      );
+      handleCancelOrderDialogClose();
+      handleOrderSummaryDialogClose();
+      getOrders();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -127,18 +153,50 @@ function App() {
           </>
         }
 
-        <OrderForm open={openDialog} onClose={handleDialogClose}  />
+        <OrderForm open={openOrderFormDialog} onClose={handleDialogClose}  />
 
         <FullScreenDialog
-          title={'Order Summary'}
+          title={`Order: ${selectedOrder && selectedOrder.code}`}
           open={openOrderSummaryDialog}
-          onClose={() => {
-            setOpenOrderSummaryDialog(false);
-            setSelectedOrder(null);
-          }}
+          onClose={handleOrderSummaryDialogClose}
         >
-          <Box sx={{pl: 2, pr: 2, flexGrow: 1}}>
+          <Box sx={{pb: 8, pl: 2, pr: 2, flexGrow: 1}}>
             <OrderSummary {...selectedOrder} />
+            {selectedOrder &&
+              [ORDER_STATUS.PREPARING, ORDER_STATUS.PREPARING].includes(selectedOrder.status) &&
+              (
+                <>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="error"
+                    sx={{mt: 8}}
+                    onClick={handleCancelOrderDialogOpen}
+                  >
+                    Cancel Order
+                  </Button>
+                  <Dialog
+                    open={openCancelOrderDialog}
+                    onClose={handleCancelOrderDialogClose}
+                  >
+                    <DialogTitle>
+                      {`Cancel Order`}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                        {`Are you sure you want to cancel order ${selectedOrder.code}?`}
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCancelOrderDialogClose}>No</Button>
+                      <Button onClick={cancelOrder} autoFocus>
+                        Yes
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </>
+              )
+            }
           </Box>
         </FullScreenDialog>
       </Box>
