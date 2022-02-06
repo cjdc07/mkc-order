@@ -3,7 +3,6 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import { AppBar, Button, Card, CardContent, Toolbar, Typography } from '@mui/material';
 
-
 import './App.css';
 import OrderForm from './routes/OrderForm';
 import { Box } from '@mui/system';
@@ -88,8 +87,12 @@ function App() {
                           >
                             <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flex:1 }}>
                               <Box>
-                                <Typography color="text.secondary">Customer Name</Typography>
-                                <Typography>{order.customerName}</Typography>
+                                <Typography color="text.secondary">Order Code</Typography>
+                                <Typography>{order.code}</Typography>
+                                <Box mt={1}>
+                                  <Typography color="text.secondary">Customer Name</Typography>
+                                  <Typography>{order.customerName}</Typography>
+                                </Box>
                                 {order.forDelivery &&
                                   <Box mt={1}>
                                     <Typography color="text.secondary">Delivery Date</Typography>
