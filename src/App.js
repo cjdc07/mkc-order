@@ -137,7 +137,9 @@ function App() {
             setSelectedOrder(null);
           }}
         >
-          <OrderSummary {...selectedOrder} />
+          <Box sx={{pl: 2, pr: 2, flexGrow: 1}}>
+            <OrderSummary {...selectedOrder} />
+          </Box>
         </FullScreenDialog>
       </Box>
     </>
