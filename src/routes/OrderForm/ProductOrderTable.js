@@ -7,8 +7,12 @@ import {formatToCurrency} from '../../utils'
 const ProductOrderTable = ({ productOrders, editProductOrder, removeProductOrder}) => {
 
   const totalProductOrderPrice = () => {
+    if (!productOrders) {
+      return;
+    }
+
     return productOrders.reduce((acc, { total }) => {
-      acc += total;
+      acc += +total;
       return acc; 
     }, 0);
   };

@@ -1,31 +1,21 @@
 import * as React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
 import CustomerInformationForm from './CustomerInformationForm';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import OrderInformationForm from './OrderInformationForm';
 import OrderSummary from './OrderSummary';
 import {
   Alert,
-  AppBar,
   Box,
   Button,
-  Dialog,
-  IconButton,
   MobileStepper,
-  Slide,
   Snackbar,
-  Toolbar,
-  Typography,
   useTheme
 } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import { LocalizationProvider } from '@mui/lab';
 
 import useOrderFormState from '../../hooks/useOrderFormState';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import FullScreenDialog from '../../components/FullScreenDialog';
 
 const OrderForm = ({ open, onClose }) => {
   const theme = useTheme();
@@ -89,10 +79,8 @@ const OrderForm = ({ open, onClose }) => {
           customerContact: formValues.customerContact,
           customerAddress: formValues.customerAddress,
           forDelivery: formValues.forDelivery,
-          deliveryDate: formValues.deliveryDate,
-          productOrders: formValues.productOrders.map(
-            ({ id, price, quantity}) => ({ productId: id, price, quantity})
-          ),
+          deliveryDate: formValues.forDelivery ? formValues.deliveryDate : null,
+          productOrders: formValues.productOrders,
         }
 
         await create('orders', payload);
@@ -141,26 +129,7 @@ const OrderForm = ({ open, onClose }) => {
 
   return (
     <>
-      <Dialog
-        fullScreen
-        open={open}
-        onClose={onClose}
-        TransitionComponent={Transition}
-      >
-        <AppBar sx={{ position: 'fixed' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={onClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-              <Typography pl={1}>{steps[activeStep].label}</Typography>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Toolbar />
+      <FullScreenDialog title={steps[activeStep].label} open={open} onClose={onClose}>
         <Box sx={{
           height: '100vh',
           width: '100vw',
@@ -204,7 +173,7 @@ const OrderForm = ({ open, onClose }) => {
             }
           />
         </Box>
-      </Dialog>
+      </FullScreenDialog>
 
       <Snackbar
         open={openErrorSnackbar}

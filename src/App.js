@@ -2,12 +2,15 @@ import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import { AppBar, Button, Card, CardContent, Toolbar, Typography } from '@mui/material';
-
-import './App.css';
-import OrderForm from './routes/OrderForm';
 import { Box } from '@mui/system';
+
+import FullScreenDialog from './components/FullScreenDialog';
+import OrderForm from './routes/OrderForm';
+import OrderSummary from './routes/OrderForm/OrderSummary';
 import useRequest from './hooks/useRequest';
 import { formatDate } from './utils';
+
+import './App.css';
 
 const ORDER_STATUS = {
   PREPARING: 'Preparing',
@@ -19,6 +22,8 @@ const ORDER_STATUS = {
 
 function App() {
   const { getList } = useRequest();
+  const [selectedOrder, setSelectedOrder] = React.useState(null);
+  const [openOrderSummaryDialog, setOpenOrderSummaryDialog] = React.useState(false);
   const [orders, setOrders] = React.useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
 
@@ -84,6 +89,10 @@ function App() {
                             key={order._id}
                             variant="outlined"
                             sx={{ display: 'flex', margin: 1, width: '40vw' }}
+                            onClick={() => {
+                              setSelectedOrder(order);
+                              setOpenOrderSummaryDialog(true);
+                            }}
                           >
                             <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flex:1 }}>
                               <Box>
@@ -117,7 +126,19 @@ function App() {
             })}
           </>
         }
+
         <OrderForm open={openDialog} onClose={handleDialogClose}  />
+
+        <FullScreenDialog
+          title={'Order Summary'}
+          open={openOrderSummaryDialog}
+          onClose={() => {
+            setOpenOrderSummaryDialog(false);
+            setSelectedOrder(null);
+          }}
+        >
+          <OrderSummary {...selectedOrder} />
+        </FullScreenDialog>
       </Box>
     </>
   );
