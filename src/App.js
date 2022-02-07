@@ -2,33 +2,23 @@ import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { AppBar, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Card, CardContent,  Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import FullScreenDialog from './components/FullScreenDialog';
 import OrderForm from './routes/OrderForm';
-import OrderSummary from './routes/OrderForm/OrderSummary';
 import useRequest from './hooks/useRequest';
+import { ORDER_STATUS } from './constants';
 import { formatDate } from './utils';
 
 import './App.css';
-
-const ORDER_STATUS = {
-  PREPARING: 'Preparing',
-  FOR_DELIVERY: 'For Delivery',
-  FOR_PAYMENT: 'For Payment',
-  COMPLETED: 'Completed',
-  CANCELLED: 'Cancelled',
-};
+import ManageOrderPage from './routes/ManageOrderPage';
 
 function App() {
-  const { getList, update } = useRequest();
+  const { getList } = useRequest();
   const [selectedOrder, setSelectedOrder] = React.useState(null);
   const [openOrderSummaryDialog, setOpenOrderSummaryDialog] = React.useState(false);
   const [orders, setOrders] = React.useState([]);
   const [openOrderFormDialog, setOpenOrderFormDialog] = React.useState(false);
-  const [openCancelOrderDialog, setOpenCancelOrderDialog] = React.useState(false);
-  const [openPaymentOrderDialog, setOpenPaymentOrderDialog] = React.useState(false);
 
   const getOrders = async () => {
     try {
@@ -54,11 +44,11 @@ function App() {
     getOrders();
   }, [])
 
-  const handleDialogOpen = () => {
+  const handleOrderFormDialogOpen = () => {
     setOpenOrderFormDialog(true);
   };
 
-  const handleDialogClose = () => {
+  const handleOrderFormDialogClose = () => {
     setOpenOrderFormDialog(false);
     getOrders(); // TODO: inefficient. refactor this
   };
@@ -66,46 +56,7 @@ function App() {
   const handleOrderSummaryDialogClose = () => {
     setOpenOrderSummaryDialog(false);
     setSelectedOrder(null);
-  }
-
-  const handleCancelOrderDialogOpen = () => setOpenCancelOrderDialog(true);
-  const handleCancelOrderDialogClose = () => setOpenCancelOrderDialog(false);
-  const cancelOrder = async () => {
-    try {
-      await update(
-        'orders',
-        {
-          ...selectedOrder,
-          id: selectedOrder._id,
-          status: ORDER_STATUS.CANCELLED,
-        },
-      );
-      handleCancelOrderDialogClose();
-      handleOrderSummaryDialogClose();
-      getOrders();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const handlePaymentOrderDialogOpen = () => setOpenPaymentOrderDialog(true);
-  const handlePaymentOrderDialogClose = () => setOpenPaymentOrderDialog(false);
-  const confirmPayment = async () => {
-    try {
-      await update(
-        'orders',
-        {
-          ...selectedOrder,
-          id: selectedOrder._id,
-          isPaid: true,
-        },
-      );
-      handlePaymentOrderDialogClose();
-      handleOrderSummaryDialogClose();
-      getOrders();
-    } catch (error) {
-      console.log(error);
-    }
+    getOrders();
   }
 
   return (
@@ -116,9 +67,10 @@ function App() {
         </Toolbar>
       </AppBar>
       <Toolbar />
+
       <Box pl={2} pr={2}>
         <Box mt={2} sx={{ display: 'flex', justifyContent: 'end'}}>
-          <Button variant="outlined" startIcon={<AddIcon />} onClick={handleDialogOpen}>
+          <Button variant="outlined" startIcon={<AddIcon />} onClick={handleOrderFormDialogOpen}>
             New Order
           </Button>
         </Box>
@@ -182,92 +134,13 @@ function App() {
           </>
         }
 
-        <OrderForm open={openOrderFormDialog} onClose={handleDialogClose}  />
-
-        <FullScreenDialog
-          title={`Order: ${selectedOrder && selectedOrder.code}`}
+        <OrderForm open={openOrderFormDialog} onClose={handleOrderFormDialogClose}  />
+        
+        <ManageOrderPage
           open={openOrderSummaryDialog}
           onClose={handleOrderSummaryDialogClose}
-        >
-          <Box sx={{pb: 8, pl: 2, pr: 2, flexGrow: 1}}>
-            {selectedOrder && (
-              <>
-                <OrderSummary {...selectedOrder} />
-
-                {![ORDER_STATUS.COMPLETED, ORDER_STATUS.CANCELLED].includes(selectedOrder.status) && (
-                  <>
-                    <Button
-                      fullWidth
-                      variant="outlined"
-                      color="success"
-                      sx={{mt: 2}}
-                      onClick={!selectedOrder.isPaid ? handlePaymentOrderDialogOpen : undefined}
-                    >
-                      {selectedOrder.isPaid ?
-                        (<><VerifiedIcon/>&nbsp;Payment Complete</>) :
-                        (<><VerifiedIcon sx={{ color: '#ccc' }}/>&nbsp;Payment Received?</>)
-                      }
-                    </Button>
-                    <Dialog
-                      open={openPaymentOrderDialog}
-                      onClose={handlePaymentOrderDialogClose}
-                    >
-                      <DialogTitle>
-                        {`Order ${selectedOrder.code} Payment`}
-                      </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          {`Recieved full payment from ${selectedOrder.customerName}?`}
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handlePaymentOrderDialogClose}>No</Button>
-                        <Button onClick={confirmPayment} autoFocus>
-                          Yes
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </>
-                )}
-
-                {[ORDER_STATUS.PREPARING, ORDER_STATUS.FOR_DELIVERY].includes(selectedOrder.status) && !selectedOrder.isPaid &&
-                  (
-                    <>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        color="error"
-                        sx={{mt: 6}}
-                        onClick={handleCancelOrderDialogOpen}
-                      >
-                        Cancel Order
-                      </Button>
-                      <Dialog
-                        open={openCancelOrderDialog}
-                        onClose={handleCancelOrderDialogClose}
-                      >
-                        <DialogTitle>
-                          {`Cancel Order`}
-                        </DialogTitle>
-                        <DialogContent>
-                          <DialogContentText>
-                            {`Are you sure you want to cancel order ${selectedOrder.code}?`}
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleCancelOrderDialogClose}>No</Button>
-                          <Button onClick={cancelOrder} autoFocus>
-                            Yes
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                    </>
-                  )
-                }
-              </>
-            )}
-          </Box>
-        </FullScreenDialog>
+          selectedOrder={selectedOrder}
+        />
       </Box>
     </>
   );
