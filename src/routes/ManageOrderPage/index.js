@@ -1,5 +1,10 @@
 import * as React from 'react';
-import VerifiedIcon from '@mui/icons-material/Verified';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PaidIcon from '@mui/icons-material/Paid';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 
 import FullScreenDialog from "../../components/FullScreenDialog";
@@ -106,7 +111,14 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
         {selectedOrder && (
           <>
             <Box p={1} mt={1} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <Typography>{selectedOrder.status}</Typography>
+              <Box sx={{display: 'flex', alignItems: 'center'}}>
+                { selectedOrder.status === ORDER_STATUS.PREPARING && <ShoppingCartIcon sx={{color: '#1976d2'}}/>}
+                { selectedOrder.status === ORDER_STATUS.FOR_DELIVERY && <LocalShippingIcon sx={{color: '#1976d2'}}/>}
+                { selectedOrder.status === ORDER_STATUS.FOR_PAYMENT && <AttachMoneyIcon sx={{color: '#1976d2'}} />}
+                { selectedOrder.status === ORDER_STATUS.COMPLETED && <CheckCircleIcon sx={{color: 'green'}} />}
+                { selectedOrder.status === ORDER_STATUS.CANCELLED && <CancelIcon sx={{color: 'red'}} />}
+                <Typography>&nbsp;{selectedOrder.status}</Typography>
+              </Box>
               {getNextStatus(selectedOrder) && (
                 <Button
                   variant="outlined"
@@ -148,8 +160,8 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
                   onClick={!selectedOrder.isPaid ? handlePaymentOrderDialogOpen : undefined}
                 >
                   {selectedOrder.isPaid ?
-                    (<><VerifiedIcon/>&nbsp;Payment Complete</>) :
-                    (<><VerifiedIcon sx={{ color: '#ccc' }}/>&nbsp;Payment Received?</>)
+                    (<><PaidIcon/>&nbsp;Payment Complete</>) :
+                    (<><PaidIcon sx={{ color: '#ccc' }}/>&nbsp;Payment Received?</>)
                   }
                 </Button>
                 <Dialog

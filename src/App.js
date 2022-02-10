@@ -1,7 +1,12 @@
 import * as React from 'react';
-import AddIcon from '@mui/icons-material/Add';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRightOutlined';
-import VerifiedIcon from '@mui/icons-material/Verified';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import PaidIcon from '@mui/icons-material/Paid';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppBar, Button, Card, CardContent,  Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
@@ -70,7 +75,7 @@ function App() {
 
       <Box pl={2} pr={2}>
         <Box mt={2} sx={{ display: 'flex', justifyContent: 'end'}}>
-          <Button variant="outlined" startIcon={<AddIcon />} onClick={handleOrderFormDialogOpen}>
+          <Button variant="outlined" startIcon={<ShoppingCartCheckoutIcon />} onClick={handleOrderFormDialogOpen}>
             New Order
           </Button>
         </Box>
@@ -80,7 +85,14 @@ function App() {
               const ordersPerStatus = orders.find(({ status }) => status === statusName)
               return (
                 <Box key={statusName}>
-                  <Typography color="text.secondary" sx={{marginBottom: 1}}>{statusName}</Typography>
+                  <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                    { statusName === ORDER_STATUS.PREPARING && <ShoppingCartIcon sx={{color: '#1976d2'}}/>}
+                    { statusName === ORDER_STATUS.FOR_DELIVERY && <LocalShippingIcon sx={{color: '#1976d2'}}/>}
+                    { statusName === ORDER_STATUS.FOR_PAYMENT && <AttachMoneyIcon sx={{color: '#1976d2'}} />}
+                    { statusName === ORDER_STATUS.COMPLETED && <CheckCircleIcon sx={{color: 'green'}} />}
+                    { statusName === ORDER_STATUS.CANCELLED && <CancelIcon sx={{color: 'red'}} />}
+                    <Typography color="text.secondary" sx={{marginBottom: 1}}>&nbsp;{statusName}</Typography>
+                  </Box>
                   <Box sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                     {ordersPerStatus ?
                       ordersPerStatus.orders.map(
@@ -98,7 +110,7 @@ function App() {
                               <Box>
                                 {order.isPaid &&
                                   <Box mb={1} sx={{color: 'green', display: 'flex', alignItems: 'center'}}>
-                                    <VerifiedIcon />&nbsp;Paid
+                                    <PaidIcon />&nbsp;Paid
                                   </Box>
                                 }
                                 <Box>
@@ -124,8 +136,10 @@ function App() {
                             </CardContent>
                           </Card>
                         )
-                      ) : 
-                      <p>Nothing!</p>
+                      ) :
+                      <Box pl={2}>
+                        <p>-</p>
+                      </Box> 
                     }
                   </Box>
                 </Box>
