@@ -7,7 +7,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PaidIcon from '@mui/icons-material/Paid';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 
-import FullScreenDialog from "../../components/FullScreenDialog";
+import FullScreenDialog from "../FullScreenDialog";
 import OrderSummary from '../OrderForm/OrderSummary';
 import useRequest from '../../hooks/useRequest';
 import { ORDER_STATUS } from '../../constants';

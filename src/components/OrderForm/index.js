@@ -16,7 +16,7 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import { LocalizationProvider } from '@mui/lab';
 
 import useOrderFormState from '../../hooks/useOrderFormState';
-import FullScreenDialog from '../../components/FullScreenDialog';
+import FullScreenDialog from '../FullScreenDialog';
 
 const OrderForm = ({ open, onClose }) => {
   const theme = useTheme();
