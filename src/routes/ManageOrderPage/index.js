@@ -119,36 +119,41 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
                 { selectedOrder.status === ORDER_STATUS.CANCELLED && <CancelIcon sx={{color: 'red'}} />}
                 <Typography>&nbsp;{selectedOrder.status}</Typography>
               </Box>
-              {getNextStatus(selectedOrder) && (
+            </Box>
+            
+            <OrderSummary {...selectedOrder} />
+
+            {getNextStatus(selectedOrder) && (
+              <>
                 <Button
+                  fullWidth
                   variant="outlined"
+                  sx={{mt: 2}}
                   onClick={handleConfirmStatusChangeDialogOpen}
                 >
                   {`Update status to "${getNextStatus(selectedOrder)}"`}
                 </Button>
-              )}
-              <Dialog
-                open={openConfirmStatusChangeDialog}
-                onClose={handleConfirmStatusChangeDialogClose}
-              >
-                <DialogTitle>
-                  {`Update order ${selectedOrder.code} status to "${getNextStatus(selectedOrder)}"`}
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    {`Are you sure you want to update order ${selectedOrder.code} status from "${selectedOrder.status}" to "${getNextStatus(selectedOrder)}"?`}
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleConfirmStatusChangeDialogClose}>No</Button>
-                  <Button onClick={() => confirmStatusChange(getNextStatus(selectedOrder))} autoFocus>
-                    Yes
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </Box>
-            
-            <OrderSummary {...selectedOrder} />
+                <Dialog
+                  open={openConfirmStatusChangeDialog}
+                  onClose={handleConfirmStatusChangeDialogClose}
+                >
+                  <DialogTitle>
+                    {`Update order ${selectedOrder.code} status to "${getNextStatus(selectedOrder)}"`}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      {`Are you sure you want to update order ${selectedOrder.code} status from "${selectedOrder.status}" to "${getNextStatus(selectedOrder)}"?`}
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleConfirmStatusChangeDialogClose}>No</Button>
+                    <Button onClick={() => confirmStatusChange(getNextStatus(selectedOrder))} autoFocus>
+                      Yes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </>
+            )}
 
             {![ORDER_STATUS.COMPLETED, ORDER_STATUS.CANCELLED].includes(selectedOrder.status) && (
               <>
@@ -156,7 +161,7 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
                   fullWidth
                   variant="outlined"
                   color="success"
-                  sx={{mt: 2}}
+                  sx={{mt: 6}}
                   onClick={!selectedOrder.isPaid ? handlePaymentOrderDialogOpen : undefined}
                 >
                   {selectedOrder.isPaid ?

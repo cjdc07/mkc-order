@@ -7,6 +7,7 @@ import {
   Alert,
   Box,
   Button,
+  CircularProgress,
   MobileStepper,
   Snackbar,
   useTheme
@@ -33,6 +34,7 @@ const OrderForm = ({ open, onClose }) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [openErrorSnackbar, setOpenErrorSnackbar] = React.useState(false);
   const [errorSnackbarMessage, setErrorSnackbarMessage] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
   const steps = [
     {
@@ -72,6 +74,8 @@ const OrderForm = ({ open, onClose }) => {
 
   const handleNext = async () => {
     if (activeStep === maxSteps - 1) {
+      setLoading(true);
+
       try {
         const payload = {
           customerName: formValues.customerName,
@@ -90,6 +94,8 @@ const OrderForm = ({ open, onClose }) => {
         setActiveStep(0);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false)
       }
 
       return;
@@ -148,18 +154,23 @@ const OrderForm = ({ open, onClose }) => {
             steps={maxSteps}
             position="static"
             activeStep={activeStep}
-            nextButton={
-              <Button
-                size="small"
-                onClick={handleNext}
-              >
-                {activeStep === maxSteps - 1 ? 'Finish' : 'Next'}
-                {theme.direction === 'rtl' ? (
-                  <KeyboardArrowLeft />
-                ) : (
-                  <KeyboardArrowRight />
-                )}
-              </Button>
+            nextButton={ loading ? (
+                <Box pr={2}>
+                  <CircularProgress size={20} />
+                </Box>
+              ) : (
+                <Button
+                  size="small"
+                  onClick={handleNext}
+                >
+                  {activeStep === maxSteps - 1 ? 'Finish' : 'Next'}
+                  {theme.direction === 'rtl' ? (
+                    <KeyboardArrowLeft />
+                  ) : (
+                    <KeyboardArrowRight />
+                  )}
+                </Button>
+              )
             }
             backButton={
               <Button size="small" onClick={handleBack} disabled={activeStep === 0}>

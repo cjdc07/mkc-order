@@ -1,10 +1,11 @@
 import * as React from 'react';
 import ProductOrderTable from './ProductOrderTable';
 import { Box } from '@mui/system';
-import { TextField, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { formatDate } from '../../utils';
 
 const OrderSummary = ({
+  code,
   productOrders,
   customerName,
   customerEmail,
@@ -15,67 +16,33 @@ const OrderSummary = ({
 }) => {
   return <Box>
     <Box p={1}>
-      <Typography color="text.secondary" sx={{marginBottom: 1}}>Customer Information</Typography>
-      <TextField
-        fullWidth
-        margin="dense"
-        id="customer-name-read-only"
-        label="Customer Name"
-        defaultValue={customerName}
-        InputProps={{
-          readOnly: true,
-        }}
-      />
+      {code && (
+        <>
+          <Typography color="text.secondary" sx={{marginBottom: 1}}>Order Code</Typography>
+          <Typography sx={{marginBottom: 1}}>{code}</Typography>
+        </>
+      )}
+      <Typography color="text.secondary" sx={{marginBottom: 1}}>Customer Name</Typography>
+      <Typography sx={{marginBottom: 1}}>{customerName}</Typography>
       {customerEmail && customerEmail !== '' && (
-        <TextField
-          fullWidth
-          margin="dense"
-          id="customer-email-read-only"
-          label="Customer Email"
-          defaultValue={customerEmail}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
+        <>
+          <Typography color="text.secondary" sx={{marginBottom: 1}}>Customer Email</Typography>
+          <Typography sx={{marginBottom: 1}}>{customerEmail}</Typography>
+        </>
       )}
       {customerContact && customerContact !== '' && (
-        <TextField
-          fullWidth
-          margin="dense"
-          id="customer-contact-read-only"
-          label="Customer Contact"
-          defaultValue={customerContact}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
+        <>
+          <Typography color="text.secondary" sx={{marginBottom: 1}}>Customer Contact</Typography>
+          <Typography sx={{marginBottom: 1}}>{customerContact}</Typography>
+        </>
       )}
     </Box>
     {forDelivery &&
       <Box p={1}>
-        <Typography color="text.secondary" sx={{marginBottom: 1}}>Delivery Information</Typography>
-        <TextField
-          fullWidth
-          margin="dense"
-          id="delivery-date-read-only"
-          label="Delivery Date"
-          defaultValue={formatDate(deliveryDate)}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <TextField
-          fullWidth
-          multiline
-          margin="dense"
-          id="customer-address-read-only"
-          label="Customer Address"
-          rows={4}
-          defaultValue={customerAddress}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
+        <Typography color="text.secondary" sx={{marginBottom: 1}}>Delivery Date</Typography>
+        <Typography sx={{marginBottom: 1}}>{formatDate(deliveryDate)}</Typography>
+        <Typography color="text.secondary" sx={{marginBottom: 1}}>Delivery Address</Typography>
+        <Typography sx={{marginBottom: 1}}>{customerAddress}</Typography>
       </Box>
     }
     <Box p={1}>
