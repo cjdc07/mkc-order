@@ -5,3 +5,9 @@ export const ORDER_STATUS = {
   COMPLETED: 'Completed',
   CANCELLED: 'Cancelled',
 };
+
+export const AUTH_STATUS = {
+  CHECKING: 'Checking',
+  AUTHENTICATED: 'Authenticated',
+  UNAUTHENTICATED: 'Unauthenticated',
+}
