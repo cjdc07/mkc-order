@@ -7,9 +7,11 @@ import OrderForm from './components/OrderForm';
 import useRequest from './hooks/useRequest';
 
 import './App.css';
+
+import Login from './components/Login';
+import Logout from './components/Logout';
 import ManageOrderPage from './components/ManageOrderPage';
 import OrdersList from './components/OrdersList';
-import Login from './components/Login';
 import { UserProvider } from './contexts/UserContext';
 
 function App() {
@@ -66,8 +68,12 @@ function App() {
       {isLoggedIn ? (
         <>
           <AppBar sx={{ position: 'fixed' }}>
-            <Toolbar>
+            <Toolbar sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}>
               <Typography>MKC Order</Typography>
+              <Logout setIsLoggedIn={setIsLoggedIn}/>
             </Toolbar>
           </AppBar>
           <Toolbar />
