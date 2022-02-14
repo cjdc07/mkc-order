@@ -1,13 +1,14 @@
+import * as React from 'react';
 import { stringify } from 'query-string';
 
 import HttpError from '../errors/HttpError';
-// import { UserContext } from '../contexts/UserContext';
+import { UserContext } from '../contexts/UserContext';
 
 // eslint-disable-next-line no-undef
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const useRequest = () => {
-  // const { setUser } = React.useContext(UserContext);
+  const { setUser } = React.useContext(UserContext);
 
   return ({
     getList: async (resource, params) => {
@@ -34,7 +35,7 @@ const useRequest = () => {
 
         if (status === 401) {
           localStorage.removeItem('access_token');
-          // setUser(null);
+          setUser(null);
         }
 
         if (status === 400) {
@@ -64,7 +65,7 @@ const useRequest = () => {
 
         if (status === 401) {
           localStorage.removeItem('access_token');
-          // setUser(null);
+          setUser(null);
         }
 
         if (status === 400) {
@@ -94,7 +95,7 @@ const useRequest = () => {
 
         if (status === 401) {
           localStorage.removeItem('access_token');
-          // setUser(null);
+          setUser(null);
         }
 
         if (status === 400) {
@@ -123,7 +124,7 @@ const useRequest = () => {
 
         if (status === 401) {
           localStorage.removeItem('access_token');
-          // setUser(null);
+          setUser(null);
         }
 
         if (status === 400) {

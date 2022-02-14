@@ -8,11 +8,39 @@ import PaidIcon from '@mui/icons-material/Paid';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Box } from '@mui/system';
 
+import useRequest from '../../hooks/useRequest';
 import { ORDER_STATUS } from "../../constants";
 import { Card, CardContent, Typography } from '@mui/material';
 import { formatDate } from '../../utils';
 
-const OrdersList = ({orders, onItemClick}) => {
+const OrdersList = ({ onItemClick}) => {
+  const { getList } = useRequest();
+  const [orders, setOrders] = React.useState([]);
+
+  const getOrders = async () => {
+    try {
+      const data = await getList('orders', {
+        pagination: {
+          page: 0,
+          perPage: 0,
+        },
+        sort: {
+          field: 'createdAt',
+          order: 'ASC',
+        },
+        filter: {},
+      });
+
+      setOrders(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  React.useEffect(() => {
+    getOrders();
+  }, []);
+
   return (
     <>
       {Object.values(ORDER_STATUS).map((statusName) => {

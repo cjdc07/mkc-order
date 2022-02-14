@@ -1,10 +1,10 @@
 import * as React from 'react';
+import _ from 'lodash';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import OrderForm from './components/OrderForm';
-import useRequest from './hooks/useRequest';
 
 import './App.css';
 
@@ -15,38 +15,12 @@ import OrdersList from './components/OrdersList';
 import { UserProvider } from './contexts/UserContext';
 
 function App() {
-  const { getList } = useRequest();
   const [selectedOrder, setSelectedOrder] = React.useState(null);
   const [openOrderSummaryDialog, setOpenOrderSummaryDialog] = React.useState(false);
-  const [orders, setOrders] = React.useState([]);
   const [openOrderFormDialog, setOpenOrderFormDialog] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [orderListKey, setOrderListKey] = React.useState(_.uniqueId('ol_'));
 
-  const getOrders = async () => {
-    try {
-      const data = await getList('orders', {
-        pagination: {
-          page: 0,
-          perPage: 0,
-        },
-        sort: {
-          field: 'createdAt',
-          order: 'ASC',
-        },
-        filter: {},
-      });
-
-      setOrders(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  React.useEffect(() => {
-    if (isLoggedIn) {
-      getOrders();
-    }
-  }, [isLoggedIn])
 
   const handleOrderFormDialogOpen = () => {
     setOpenOrderFormDialog(true);
@@ -54,13 +28,13 @@ function App() {
 
   const handleOrderFormDialogClose = () => {
     setOpenOrderFormDialog(false);
-    getOrders(); // TODO: inefficient. refactor this
+    setOrderListKey(_.uniqueId('ol_')); // TODO: inefficient. loads all orders again
   };
 
   const handleOrderSummaryDialogClose = () => {
     setOpenOrderSummaryDialog(false);
     setSelectedOrder(null);
-    getOrders();
+    setOrderListKey(_.uniqueId('ol_')); // TODO: inefficient. loads all orders again
   }
 
   return (
@@ -85,12 +59,10 @@ function App() {
               </Button>
             </Box>
 
-            {orders && orders.length > 0 &&
-              <OrdersList orders={orders} onItemClick={(order) => {
-                setSelectedOrder(order);
-                setOpenOrderSummaryDialog(true);
-              }} />
-            }
+            <OrdersList key={orderListKey} onItemClick={(order) => {
+              setSelectedOrder(order);
+              setOpenOrderSummaryDialog(true);
+            }} />
 
             <OrderForm open={openOrderFormDialog} onClose={handleOrderFormDialogClose}  />
             
