@@ -15,6 +15,7 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
+  Typography,
 } from '@mui/material';
 
 import useRequest from '../../hooks/useRequest';
@@ -33,6 +34,8 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
   const [openAutocomplete, setOpenAutocomplete] = React.useState(false);
   const [openProductOrderDialog, setOpenProductOrderDialog] = React.useState(false);
   const [options, setOptions] = React.useState([]);
+  const [isLowStock, setIsLowStock] = React.useState(false);
+  const [isZeroQuantity, setIsZeroQuantity] = React.useState(false);
   const loading = openAutocomplete && options.length === 0;
 
   React.useEffect(() => {
@@ -90,6 +93,8 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
   const handleCloseAutocomplete = () => setOpenAutocomplete(false);
   const handleOpenProductOrderDialog = () => setOpenProductOrderDialog(true);
   const handlCloseProductOrderDialog = () => {
+    setIsLowStock(false);
+    setIsZeroQuantity(false);
     setOpenProductOrderDialog(false);
     setSelectedProduct(null);
     setAutocompleteKey(_.uniqueId("acf_"));
@@ -97,6 +102,19 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
 
   const setQuantity = (e) => {
     const quantity = +e.target.value;
+
+    if (quantity > selectedProduct.quantity || selectedProduct.quantity < 1) {
+      setIsLowStock(true);
+    } else {
+      setIsLowStock(false);
+    }
+
+    if (quantity < 1) {
+      setIsZeroQuantity(true);
+    } else {
+      setIsZeroQuantity(false);
+    }
+
     const total = quantity * productOrder.price
     setProductOrder({ ...productOrder, quantity, total });
   };
@@ -132,8 +150,19 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
         options={options}
         loading={loading}
         renderOption={(props, option) => (
-          <Box component="li" {...props}>
-            [{option.code}] {option.name}
+          <Box
+            component="li"
+            {...props}
+            onClick={option.quantity < 1 ? () => null : props.onClick}
+          >
+            <Typography color={option.quantity < 1 && 'text.disabled'}>
+              [{option.code}] {option.name}
+            </Typography> 
+            {option.quantity < 1 && (
+              <Typography color="error.main">
+                &nbsp;&nbsp;&nbsp;&nbsp;No available supply!
+              </Typography>
+            )}
           </Box>
         )}
         renderInput={(params) => (
@@ -191,13 +220,19 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
               label="Quantity"
               type="number"
               variant="outlined"
-              helperText={`Max quantity: ${selectedProduct.quantity}`}
+              error={isLowStock || isZeroQuantity}
+              helperText={
+                `In stock: ${selectedProduct.quantity}
+                ${isLowStock ? '(Not enough stock to fulfill order!)' : ''}
+                ${isZeroQuantity ? '(Must order at least 1!)' : ''}`
+              }
               onChange={setQuantity}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handlCloseProductOrderDialog}>Cancel</Button>
             <Button
+              disabled={isLowStock || isZeroQuantity}
               onClick={() => {
                 addToCart(productOrder);
                 handlCloseProductOrderDialog();
