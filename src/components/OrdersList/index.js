@@ -87,9 +87,15 @@ const OrdersList = ({ onItemClick}) => {
                             </Box>
                           }
                           <Box mt={1}>
-                              <Typography color="text.secondary">Created</Typography>
-                              <Typography>{formatDate(order.createdAt)}</Typography>
+                            <Typography color="text.secondary">Created</Typography>
+                            <Typography>{formatDate(order.createdAt)}</Typography>
+                          </Box>
+                          {statusName === ORDER_STATUS.COMPLETED &&
+                            <Box mt={1}>
+                              <Typography color="text.secondary">Completed</Typography>
+                              <Typography>{formatDate(order.updatedAt)}</Typography>
                             </Box>
+                          }
                         </Box>
                         <Box><ArrowCircleRightIcon /></Box>
                       </CardContent>
