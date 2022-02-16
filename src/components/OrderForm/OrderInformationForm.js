@@ -211,6 +211,11 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
                   control={<Radio />}
                   label={`${formatToCurrency(selectedProduct.srp2)} (SRP2)`}
                 />
+                <FormControlLabel
+                  value={0}
+                  control={<Radio />}
+                  label={`${formatToCurrency(0)} (Freebie)`}
+                />
               </RadioGroup>
             </FormControl>
             <TextField
