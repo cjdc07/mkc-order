@@ -7,7 +7,7 @@ import { UserContext } from '../../contexts/UserContext';
 
 const Logout = ({ setIsLoggedIn }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { setUser } = React.useContext(UserContext);
+  const { user, setUser } = React.useContext(UserContext);
 
   const logout = () => {
     localStorage.removeItem('access_token');
@@ -18,16 +18,18 @@ const Logout = ({ setIsLoggedIn }) => {
 
   return (
     <Box>
-      <IconButton
-        size="large"
-        aria-label="account of current user"
-        aria-controls="menu-appbar"
-        aria-haspopup="true"
-        onClick={(e) => setAnchorEl(e.currentTarget)}
-        color="inherit"
-      >
-        <AccountCircle />
-      </IconButton>
+      <Box onClick={(e) => setAnchorEl(e.currentTarget)}>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="menu-appbar"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        {user.username}
+      </Box>
       <Menu
         id="menu-appbar"
         anchorEl={anchorEl}
