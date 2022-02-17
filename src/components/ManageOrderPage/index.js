@@ -11,6 +11,7 @@ import FullScreenDialog from "../FullScreenDialog";
 import OrderSummary from '../OrderForm/OrderSummary';
 import useRequest from '../../hooks/useRequest';
 import { ORDER_STATUS } from '../../constants';
+import { formatDate } from '../../utils';
 
 const ManageOrderPage = ({open, onClose, selectedOrder}) => {
   const { update } = useRequest();
@@ -121,6 +122,19 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
               </Box>
             </Box>
             
+            <Box p={1}>
+              <>
+                <Typography color="text.secondary" sx={{marginBottom: 1}}>Created on</Typography>
+                <Typography sx={{marginBottom: 1}}>{formatDate(selectedOrder.createdAt)}</Typography>
+              </>
+              {selectedOrder.status === ORDER_STATUS.COMPLETED &&
+                <>
+                  <Typography color="text.secondary" sx={{marginBottom: 1}}>Completed on</Typography>
+                  <Typography sx={{marginBottom: 1}}>{formatDate(selectedOrder.updatedAt)}</Typography>
+                </>
+              }
+            </Box>
+
             <OrderSummary {...selectedOrder} />
 
             {getNextStatus(selectedOrder) && (

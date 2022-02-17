@@ -80,22 +80,10 @@ const OrdersList = ({ onItemClick}) => {
                             <Typography color="text.secondary">Customer Name</Typography>
                             <Typography>{order.customerName}</Typography>
                           </Box>
-                          {order.forDelivery &&
-                            <Box mt={1}>
-                              <Typography color="text.secondary">Delivery Date</Typography>
-                              <Typography>{formatDate(order.deliveryDate)}</Typography>
-                            </Box>
-                          }
                           <Box mt={1}>
                             <Typography color="text.secondary">Created</Typography>
                             <Typography>{formatDate(order.createdAt)}</Typography>
                           </Box>
-                          {statusName === ORDER_STATUS.COMPLETED &&
-                            <Box mt={1}>
-                              <Typography color="text.secondary">Completed</Typography>
-                              <Typography>{formatDate(order.updatedAt)}</Typography>
-                            </Box>
-                          }
                         </Box>
                         <Box><ArrowCircleRightIcon /></Box>
                       </CardContent>
