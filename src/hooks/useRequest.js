@@ -5,7 +5,7 @@ import HttpError from '../errors/HttpError';
 import { UserContext } from '../contexts/UserContext';
 
 // eslint-disable-next-line no-undef
-const apiUrl = process.env.REACT_APP_API_URL;
+export const API_URL = process.env.REACT_APP_API_URL;
 
 const useRequest = () => {
   const { setUser } = React.useContext(UserContext);
@@ -19,7 +19,7 @@ const useRequest = () => {
         range: JSON.stringify([(page) * perPage, perPage]),
         filter: JSON.stringify(params.filter),
       };
-      const url = `${apiUrl}/${resource}?${stringify(query)}`;
+      const url = `${API_URL}/${resource}?${stringify(query)}`;
 
       const response = await fetch(url, {
         headers: {
@@ -49,7 +49,7 @@ const useRequest = () => {
     },
 
     create: async (resource, data) => {
-      const response = await fetch(`${apiUrl}/${resource}`, {
+      const response = await fetch(`${API_URL}/${resource}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const useRequest = () => {
     },
 
     update: async (resource, data) => {
-      const response = await fetch(`${apiUrl}/${resource}/${data.id}`, {
+      const response = await fetch(`${API_URL}/${resource}/${data.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ const useRequest = () => {
     },
 
     deleteOne: async (resource, params) => {
-      const response = await fetch(`${apiUrl}/${resource}/${params.id}`, {
+      const response = await fetch(`${API_URL}/${resource}/${params.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

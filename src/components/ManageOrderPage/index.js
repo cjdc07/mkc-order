@@ -9,7 +9,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, D
 
 import FullScreenDialog from "../FullScreenDialog";
 import OrderSummary from '../OrderForm/OrderSummary';
-import useRequest from '../../hooks/useRequest';
+import useRequest, { API_URL } from '../../hooks/useRequest';
 import { ORDER_STATUS } from '../../constants';
 import { formatDate } from '../../utils';
 
@@ -18,6 +18,7 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = React.useState(false);
   const [openPaymentOrderDialog, setOpenPaymentOrderDialog] = React.useState(false);
   const [openConfirmStatusChangeDialog, setOpenConfirmStatusChangeDialog] = React.useState(false);
+  const [invoiceUrl, setInvoiceUrl] = React.useState(null);
 
   const handleCancelOrderDialogOpen = () => setOpenCancelOrderDialog(true);
   const handleCancelOrderDialogClose = () => setOpenCancelOrderDialog(false);
@@ -100,6 +101,19 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
       default:
         return null;
     }
+  }
+
+  const getInvoice = async (code) => {
+    const response = await fetch(`${API_URL}/orders/${code}/invoice`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    });
+
+    const newBlob = new Blob([await response.blob()], { type: 'application/pdf' });
+    const objUrl = window.URL.createObjectURL(newBlob);
+    setInvoiceUrl(objUrl);
   }
 
   return (
@@ -239,6 +253,19 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
                 </>
               )
             }
+
+            <Button
+              fullWidth
+              variant="outlined"
+              color="success"
+              sx={{mt: 6}}
+              onClick={() => getInvoice(selectedOrder.code)}
+            >
+              Download Invoice
+            </Button>
+            <a href={invoiceUrl} target="_blank" rel="noreferrer">
+              Show Invoice
+            </a>
           </>
         )}
       </Box>
