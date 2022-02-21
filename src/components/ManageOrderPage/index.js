@@ -5,7 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PaidIcon from '@mui/icons-material/Paid';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link, Typography } from '@mui/material';
 
 import FullScreenDialog from "../FullScreenDialog";
 import OrderSummary from '../OrderForm/OrderSummary';
@@ -20,6 +20,25 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
   const [openConfirmStatusChangeDialog, setOpenConfirmStatusChangeDialog] = React.useState(false);
   const [invoiceUrl, setInvoiceUrl] = React.useState(null);
 
+  React.useEffect(() => {
+    if (selectedOrder) {
+      getInvoice(selectedOrder.code);
+    }
+  }, [selectedOrder]);
+
+  const getInvoice = async (code) => {
+    const response = await fetch(`${API_URL}/orders/${code}/invoice`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    });
+
+    const newBlob = new Blob([await response.blob()], { type: 'application/pdf' });
+    const objUrl = window.URL.createObjectURL(newBlob);
+    setInvoiceUrl(objUrl);
+  }
+
   const handleCancelOrderDialogOpen = () => setOpenCancelOrderDialog(true);
   const handleCancelOrderDialogClose = () => setOpenCancelOrderDialog(false);
   const cancelOrder = async () => {
@@ -33,7 +52,7 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
         },
       );
       handleCancelOrderDialogClose();
-      onClose();
+      close();
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +74,7 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
         },
       );
       handlePaymentOrderDialogClose();
-      onClose();
+      close();
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +93,7 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
         },
       );
       handleConfirmStatusChangeDialogClose();
-      onClose();
+      close();
     } catch (error) {
       console.log(error);
     }
@@ -103,24 +122,16 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
     }
   }
 
-  const getInvoice = async (code) => {
-    const response = await fetch(`${API_URL}/orders/${code}/invoice`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-      },
-    });
-
-    const newBlob = new Blob([await response.blob()], { type: 'application/pdf' });
-    const objUrl = window.URL.createObjectURL(newBlob);
-    setInvoiceUrl(objUrl);
-  }
+  const close = () => {
+    setInvoiceUrl(null);
+    onClose();
+  };
 
   return (
     <FullScreenDialog
       title={`Order: ${selectedOrder && selectedOrder.code}`}
       open={open}
-      onClose={onClose}
+      onClose={close}
     >
       <Box sx={{pb: 8, pl: 2, pr: 2, flexGrow: 1}}>
         {selectedOrder && (
@@ -134,6 +145,17 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
                 { selectedOrder.status === ORDER_STATUS.CANCELLED && <CancelIcon sx={{color: 'red'}} />}
                 <Typography>&nbsp;{selectedOrder.status}</Typography>
               </Box>
+              
+              <Link
+                
+                href={invoiceUrl}
+                target="_blank"
+                rel="noreferrer"
+                variant="button"
+                underline="none"
+              >
+                Show Invoice
+              </Link>
             </Box>
             
             <Box p={1}>
@@ -253,19 +275,6 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
                 </>
               )
             }
-
-            <Button
-              fullWidth
-              variant="outlined"
-              color="success"
-              sx={{mt: 6}}
-              onClick={() => getInvoice(selectedOrder.code)}
-            >
-              Download Invoice
-            </Button>
-            <a href={invoiceUrl} target="_blank" rel="noreferrer">
-              Show Invoice
-            </a>
           </>
         )}
       </Box>
