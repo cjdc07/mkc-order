@@ -22,12 +22,12 @@ const ManageOrderPage = ({open, onClose, selectedOrder}) => {
 
   React.useEffect(() => {
     if (selectedOrder) {
-      getInvoice(selectedOrder.code);
+      getInvoice(selectedOrder._id);
     }
   }, [selectedOrder]);
 
-  const getInvoice = async (code) => {
-    const response = await fetch(`${API_URL}/orders/${code}/invoice`, {
+  const getInvoice = async (id) => {
+    const response = await fetch(`${API_URL}/orders/${id}/invoice`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,

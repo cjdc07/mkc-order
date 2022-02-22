@@ -160,7 +160,7 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
             </Typography> 
             {option.quantity < 1 && (
               <Typography color="error.main">
-                &nbsp;&nbsp;&nbsp;&nbsp;No available supply!
+                &nbsp;OUT OF STOCK
               </Typography>
             )}
           </Box>
