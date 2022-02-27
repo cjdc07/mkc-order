@@ -9,21 +9,28 @@ const UserProvider = ({ children }) => {
   const [authStatus, setAuthStatus] = React.useState(AUTH_STATUS.CHECKING);
   const { check } = useAuth();
 
+  const handleAuthCheck = async () => {
+    try {
+      const user = await check();
+      setUser(user);
+      setAuthStatus(AUTH_STATUS.AUTHENTICATED);
+    } catch (err) {
+      if (user !== null && localStorage.getItem('access_token') !== null) {
+        window.location.reload();
+      }
+      
+      setUser(null);
+      setAuthStatus(AUTH_STATUS.UNAUTHENTICATED);
+      localStorage.removeItem('access_token');
+    }
+  }
+
   React.useEffect(() => {
-    check()
-      .then(user => {
-        setUser(user);
-        setAuthStatus(AUTH_STATUS.AUTHENTICATED);
-      })
-      .catch(() => {
-        setUser(null);
-        setAuthStatus(AUTH_STATUS.UNAUTHENTICATED);
-        localStorage.removeItem('access_token');
-      });
+    handleAuthCheck();
   }, [])
 
   return (
-    <UserContext.Provider value={{ user, setUser, authStatus }}>
+    <UserContext.Provider value={{ user, setUser, authStatus, handleAuthCheck }}>
       {children}
     </UserContext.Provider>
   );

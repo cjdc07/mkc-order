@@ -8,7 +8,7 @@ import { UserContext } from '../contexts/UserContext';
 export const API_URL = process.env.REACT_APP_API_URL;
 
 const useRequest = () => {
-  const { setUser } = React.useContext(UserContext);
+  const { handleAuthCheck } = React.useContext(UserContext);
 
   return ({
     getList: async (resource, params) => {
@@ -34,8 +34,7 @@ const useRequest = () => {
         let status = error.statusCode;
 
         if (status === 401) {
-          localStorage.removeItem('access_token');
-          setUser(null);
+          await handleAuthCheck();
         }
 
         if (status === 400) {
@@ -64,8 +63,7 @@ const useRequest = () => {
         let status = error.statusCode;
 
         if (status === 401) {
-          localStorage.removeItem('access_token');
-          setUser(null);
+          await handleAuthCheck();
         }
 
         if (status === 400) {
@@ -94,8 +92,7 @@ const useRequest = () => {
         let status = error.statusCode;
 
         if (status === 401) {
-          localStorage.removeItem('access_token');
-          setUser(null);
+          await handleAuthCheck();
         }
 
         if (status === 400) {
@@ -123,8 +120,7 @@ const useRequest = () => {
         let status = error.statusCode;
 
         if (status === 401) {
-          localStorage.removeItem('access_token');
-          setUser(null);
+          await handleAuthCheck();
         }
 
         if (status === 400) {

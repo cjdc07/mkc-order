@@ -17,6 +17,10 @@ const OrdersList = ({ onItemClick}) => {
   const { getList } = useRequest();
   const [orders, setOrders] = React.useState([]);
 
+  React.useEffect(() => {
+    getOrders();
+  }, []);
+
   const getOrders = async () => {
     try {
       const data = await getList('orders', {
@@ -36,10 +40,6 @@ const OrdersList = ({ onItemClick}) => {
       console.log(error);
     }
   }
-
-  React.useEffect(() => {
-    getOrders();
-  }, []);
 
   return (
     <>

@@ -17,6 +17,7 @@ import { LocalizationProvider } from '@mui/lab';
 
 import useOrderFormState from '../../hooks/useOrderFormState';
 import FullScreenDialog from '../FullScreenDialog';
+import { UserContext } from '../../contexts/UserContext';
 
 const OrderForm = ({ open, onClose }) => {
   const theme = useTheme();
@@ -35,6 +36,12 @@ const OrderForm = ({ open, onClose }) => {
   const [openErrorSnackbar, setOpenErrorSnackbar] = React.useState(false);
   const [errorSnackbarMessage, setErrorSnackbarMessage] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
+  const { handleAuthCheck } = React.useContext(UserContext);
+
+
+  React.useEffect(() => {
+    handleAuthCheck();
+  }, [activeStep]);
 
   const steps = [
     {

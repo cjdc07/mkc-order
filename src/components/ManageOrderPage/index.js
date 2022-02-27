@@ -11,19 +11,27 @@ import FullScreenDialog from "../FullScreenDialog";
 import OrderSummary from '../OrderForm/OrderSummary';
 import useRequest, { API_URL } from '../../hooks/useRequest';
 import { ORDER_STATUS } from '../../constants';
+import { UserContext } from '../../contexts/UserContext';
 import { formatDate } from '../../utils';
 
 const ManageOrderPage = ({open, onClose, selectedOrder}) => {
   const { update } = useRequest();
+  const { handleAuthCheck } = React.useContext(UserContext);
   const [openCancelOrderDialog, setOpenCancelOrderDialog] = React.useState(false);
   const [openPaymentOrderDialog, setOpenPaymentOrderDialog] = React.useState(false);
   const [openConfirmStatusChangeDialog, setOpenConfirmStatusChangeDialog] = React.useState(false);
   const [invoiceUrl, setInvoiceUrl] = React.useState(null);
 
-  React.useEffect(() => {
+  const onComponentLoad = async () => {
+    await handleAuthCheck();
+
     if (selectedOrder) {
       getInvoice(selectedOrder._id);
     }
+  }
+
+  React.useEffect(() => {
+    onComponentLoad();
   }, [selectedOrder]);
 
   const getInvoice = async (id) => {

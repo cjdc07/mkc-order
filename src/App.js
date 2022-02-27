@@ -21,7 +21,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [orderListKey, setOrderListKey] = React.useState(_.uniqueId('ol_'));
 
-
   const handleOrderFormDialogOpen = () => {
     setOpenOrderFormDialog(true);
   };

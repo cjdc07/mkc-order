@@ -16,6 +16,10 @@ const Logout = ({ setIsLoggedIn }) => {
     setIsLoggedIn(false);
   }
 
+  if (!user) {
+    return <></>
+  }
+
   return (
     <Box>
       <Box onClick={(e) => setAnchorEl(e.currentTarget)}>
