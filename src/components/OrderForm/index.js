@@ -33,6 +33,7 @@ const OrderForm = ({ open, onClose }) => {
     removeProductOrder,
     create,
     clearFields,
+    computeTotalProductOrderDue,
   } = useOrderFormState();
   const [activeStep, setActiveStep] = React.useState(0);
   const [openErrorSnackbar, setOpenErrorSnackbar] = React.useState(false);
@@ -62,6 +63,7 @@ const OrderForm = ({ open, onClose }) => {
           productOrders={productOrders}
           addToCart={addToCart}
           removeProductOrder={removeProductOrder}
+          total={computeTotalProductOrderDue()}
         />,
     },
     {
@@ -71,6 +73,7 @@ const OrderForm = ({ open, onClose }) => {
           formErrors={formErrors}
           inputChange={inputChange}
           formValues={formValues}
+          total={computeTotalProductOrderDue()}
         />,
     },
     {
@@ -78,6 +81,7 @@ const OrderForm = ({ open, onClose }) => {
       component:
         <OrderSummary
           productOrders={productOrders}
+          total={computeTotalProductOrderDue()}
           {...formValues}
         />
     },

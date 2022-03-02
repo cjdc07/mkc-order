@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { DatePicker } from '@mui/lab';
+import { formatCurrency } from '../../utils';
 
-
-const PaymentInformationForm = ({formErrors, inputChange, formValues}) => {
+const PaymentInformationForm = ({formErrors, inputChange, formValues, total}) => {
   return <>
     <FormControl fullWidth>
       <InputLabel id="payment-method-label">Payment Method</InputLabel>
@@ -45,7 +45,11 @@ const PaymentInformationForm = ({formErrors, inputChange, formValues}) => {
       type="number"
       variant="outlined"
       error={!!formErrors['initialPayment']}
-      helperText={formErrors['initialPayment']}
+      helperText={
+        formErrors['initialPayment'] ?
+          formErrors['initialPayment'] :
+          `Total amount due: ${formatCurrency(total)}`
+      }
       onChange={inputChange}
     />
   </>

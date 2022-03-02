@@ -26,7 +26,7 @@ const filterOptions = createFilterOptions({
   stringify: ({ code, name }) => `${code} ${name}`
 });
 
-const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) => {
+const OrderInformationForm = ({productOrders, addToCart, removeProductOrder, total}) => {
   const { getList } = useRequest();
   const [autocompleteKey, setAutocompleteKey] = React.useState(_.uniqueId("acf_"))
   const [selectedProduct, setSelectedProduct] = React.useState(null);
@@ -186,6 +186,7 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
           productOrders={productOrders}
           editProductOrder={editProductOrder}
           removeProductOrder={removeProductOrder}
+          total={total}
         />
       </Box>
       {openProductOrderDialog && selectedProduct &&

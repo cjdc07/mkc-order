@@ -16,6 +16,7 @@ const OrderSummary = ({
   paymentMethod,
   paymentDueDate,
   initialPayment,
+  total,
 }) => {
   return <Box>
     <Box p={1}>
@@ -60,6 +61,7 @@ const OrderSummary = ({
       <Typography color="text.secondary">Product Orders</Typography>
       <ProductOrderTable
         productOrders={productOrders}
+        total={total}
       />
     </Box>
   </Box>

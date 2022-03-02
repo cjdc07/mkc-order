@@ -88,6 +88,17 @@ const useOrderFormState = () => {
     setFormValues(defaultFormValues);
   };
 
+  const computeTotalProductOrderDue = () => {
+    if (!productOrders) {
+      return;
+    }
+
+    return productOrders.reduce((acc, { total }) => {
+      acc += +total;
+      return acc; 
+    }, 0);
+  };
+
   return {
     addToCart,
     create,
@@ -100,6 +111,7 @@ const useOrderFormState = () => {
     removeProductOrder,
     setProductOrders,
     clearFields,
+    computeTotalProductOrderDue,
   }
 }
 

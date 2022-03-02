@@ -4,19 +4,7 @@ import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 
 import {formatCurrency} from '../../utils'
 
-const ProductOrderTable = ({ productOrders, editProductOrder, removeProductOrder}) => {
-
-  const totalProductOrderPrice = () => {
-    if (!productOrders) {
-      return;
-    }
-
-    return productOrders.reduce((acc, { total }) => {
-      acc += +total;
-      return acc; 
-    }, 0);
-  };
-
+const ProductOrderTable = ({ productOrders, editProductOrder, removeProductOrder, total}) => {
   return <>
     <TableContainer sx={{height: '100%'}}>
       <Table stickyHeader size="small" sx={{ width: '100%', paddingTop: 2}}>
@@ -81,7 +69,7 @@ const ProductOrderTable = ({ productOrders, editProductOrder, removeProductOrder
           <TableRow sx={{height: 56 }}>
             <TableCell colSpan={2}>Total</TableCell>
             <TableCell align="right">
-              {formatCurrency(totalProductOrderPrice())}
+              {formatCurrency(total)}
             </TableCell>
           </TableRow>
         </TableBody>
