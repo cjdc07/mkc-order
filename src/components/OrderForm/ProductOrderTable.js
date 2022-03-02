@@ -2,7 +2,7 @@ import * as React from 'react';
 import RemoveIcon from '@mui/icons-material/RemoveCircleOutline';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
-import {formatToCurrency} from '../../utils'
+import {formatCurrency} from '../../utils'
 
 const ProductOrderTable = ({ productOrders, editProductOrder, removeProductOrder}) => {
 
@@ -52,9 +52,9 @@ const ProductOrderTable = ({ productOrders, editProductOrder, removeProductOrder
                   }
                   <TableCell>{productOrder.code}</TableCell>
                   <TableCell>{productOrder.name}</TableCell>
-                  <TableCell>{formatToCurrency(productOrder.price)}</TableCell>
+                  <TableCell>{formatCurrency(productOrder.price)}</TableCell>
                   <TableCell>{productOrder.quantity}</TableCell>
-                  <TableCell align="right">{formatToCurrency(productOrder.total)}</TableCell>
+                  <TableCell align="right">{formatCurrency(productOrder.total)}</TableCell>
                 </TableRow>
               ))}
             </>:
@@ -81,7 +81,7 @@ const ProductOrderTable = ({ productOrders, editProductOrder, removeProductOrder
           <TableRow sx={{height: 56 }}>
             <TableCell colSpan={2}>Total</TableCell>
             <TableCell align="right">
-              {formatToCurrency(totalProductOrderPrice())}
+              {formatCurrency(totalProductOrderPrice())}
             </TableCell>
           </TableRow>
         </TableBody>

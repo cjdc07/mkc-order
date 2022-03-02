@@ -2,7 +2,7 @@ import * as React from 'react';
 import ProductOrderTable from './ProductOrderTable';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
-import { formatDate, formatToCurrency } from '../../utils';
+import { formatDate, formatCurrency } from '../../utils';
 
 const OrderSummary = ({
   code,
@@ -49,18 +49,18 @@ const OrderSummary = ({
       </Box>
     }
     <Box p={1}>
-      <Typography color="text.secondary">Product Orders</Typography>
-      <ProductOrderTable
-        productOrders={productOrders}
-      />
-    </Box>
-    <Box p={1}>
       <Typography color="text.secondary" sx={{marginBottom: 1}}>Payment Method</Typography>
       <Typography sx={{marginBottom: 1}}>{paymentMethod}</Typography>
       <Typography color="text.secondary" sx={{marginBottom: 1}}>Payment Due Date</Typography>
       <Typography sx={{marginBottom: 1}}>{formatDate(paymentDueDate)}</Typography>
       <Typography color="text.secondary" sx={{marginBottom: 1}}>Initial Payment</Typography>
-      <Typography sx={{marginBottom: 1}}>{formatToCurrency(initialPayment)}</Typography>
+      <Typography sx={{marginBottom: 1}}>{formatCurrency(initialPayment)}</Typography>
+    </Box>
+    <Box p={1}>
+      <Typography color="text.secondary">Product Orders</Typography>
+      <ProductOrderTable
+        productOrders={productOrders}
+      />
     </Box>
   </Box>
 }

@@ -20,7 +20,7 @@ import {
 
 import useRequest from '../../hooks/useRequest';
 import ProductOrderTable from './ProductOrderTable';
-import {formatToCurrency} from '../../utils'
+import {formatCurrency} from '../../utils'
 
 const filterOptions = createFilterOptions({
   stringify: ({ code, name }) => `${code} ${name}`
@@ -204,17 +204,17 @@ const OrderInformationForm = ({productOrders, addToCart, removeProductOrder}) =>
                 <FormControlLabel
                   value={selectedProduct.srp1}
                   control={<Radio />}
-                  label={`${formatToCurrency(selectedProduct.srp1)} (SRP1)`}
+                  label={`${formatCurrency(selectedProduct.srp1)} (SRP1)`}
                 />
                 <FormControlLabel
                   value={selectedProduct.srp2}
                   control={<Radio />}
-                  label={`${formatToCurrency(selectedProduct.srp2)} (SRP2)`}
+                  label={`${formatCurrency(selectedProduct.srp2)} (SRP2)`}
                 />
                 <FormControlLabel
                   value={0}
                   control={<Radio />}
-                  label={`${formatToCurrency(0)} (Freebie)`}
+                  label={`${formatCurrency(0)} (Freebie)`}
                 />
               </RadioGroup>
             </FormControl>
