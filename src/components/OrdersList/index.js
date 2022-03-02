@@ -62,7 +62,7 @@ const OrdersList = ({ onItemClick}) => {
                     <Card
                       key={order._id}
                       variant="outlined"
-                      sx={{ display: 'flex', margin: 1, width: '40vw' }}
+                      sx={{ display: 'flex', margin: 1, width: '100%' }}
                       onClick={() => onItemClick(order)}
                     >
                       <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flex:1 }}>
