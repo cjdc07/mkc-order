@@ -9,6 +9,9 @@ const defaultFormValues = {
   customerAddress: '',
   deliveryDate: new Date(),
   productOrders: null,
+  paymentMethod: 'Cash',
+  paymentDueDate: new Date(),
+  initialPayment: 0,
 };
 
 const optionalFields = ['customerContact', 'customerEmail', 'forDelivery'];
@@ -28,7 +31,11 @@ const useOrderFormState = () => {
       value = e.target.value;
     }
 
-    if (type === 'deliveryDate') {
+    if (type === 'paymentMethod') {
+      id = type;
+    }
+
+    if (type === 'deliveryDate' || type === 'paymentDueDate') {
       id = type;
       value = e;
     }
@@ -87,6 +94,7 @@ const useOrderFormState = () => {
     formErrors,
     setFormErrors,
     formValues,
+    setFormValues,
     inputChange,
     productOrders,
     removeProductOrder,

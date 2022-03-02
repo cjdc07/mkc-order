@@ -15,8 +15,9 @@ import {
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import { LocalizationProvider } from '@mui/lab';
 
-import useOrderFormState from '../../hooks/useOrderFormState';
 import FullScreenDialog from '../FullScreenDialog';
+import PaymentInformationForm from './PaymentInformationForm';
+import useOrderFormState from '../../hooks/useOrderFormState';
 import { UserContext } from '../../contexts/UserContext';
 
 const OrderForm = ({ open, onClose }) => {
@@ -25,6 +26,7 @@ const OrderForm = ({ open, onClose }) => {
     formErrors,
     setFormErrors,
     formValues,
+    setFormValues,
     inputChange,
     productOrders,
     addToCart,
@@ -63,16 +65,20 @@ const OrderForm = ({ open, onClose }) => {
         />,
     },
     {
+      label: 'Enter Payment Information',
+      component: 
+        <PaymentInformationForm
+          formErrors={formErrors}
+          inputChange={inputChange}
+          formValues={formValues}
+        />,
+    },
+    {
       label: 'Order Summary',
       component:
         <OrderSummary
           productOrders={productOrders}
-          customerName={formValues.customerName}
-          customerEmail={formValues.customerEmail}
-          customerContact={formValues.customerContact}
-          customerAddress={formValues.customerAddress}
-          forDelivery={formValues.forDelivery}
-          deliveryDate={formValues.deliveryDate}
+          {...formValues}
         />
     },
   ];
@@ -92,6 +98,9 @@ const OrderForm = ({ open, onClose }) => {
           forDelivery: formValues.forDelivery,
           deliveryDate: formValues.forDelivery ? formValues.deliveryDate : null,
           productOrders: formValues.productOrders,
+          paymentMethod: formValues.paymentMethod,
+          paymentDueDate: formValues.paymentDueDate,
+          initialPayment: formValues.initialPayment,
         }
 
         await create('orders', payload);
@@ -134,6 +143,12 @@ const OrderForm = ({ open, onClose }) => {
   };
 
   const handleBack = () => {
+    if (activeStep === 2) {
+      // Reset initalPayment and initialPayment error when going back to OrderInfo Page
+      delete formErrors['initialPayment'];
+      setFormErrors({...formErrors});
+      setFormValues({...formValues, initialPayment: 0})
+    }
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
