@@ -149,9 +149,11 @@ const OrderForm = ({ open, onClose }) => {
   const handleBack = () => {
     if (activeStep === 2) {
       // Reset initalPayment and initialPayment error when going back to OrderInfo Page
-      delete formErrors['initialPayment'];
-      setFormErrors({...formErrors});
-      setFormValues({...formValues, initialPayment: 0})
+      if ('initialPayment' in formErrors) {
+        delete formErrors['initialPayment'];
+        setFormErrors({...formErrors});
+        setFormValues({...formValues, initialPayment: 0})
+      }
     }
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };

@@ -56,6 +56,11 @@ const useOrderFormState = () => {
           ...formErrors,
           [id]: 'This field is required.'
         });
+      } else if (id === 'initialPayment' && +value > computeTotalProductOrderDue()) {
+        setFormErrors({
+          ...formErrors,
+          initialPayment: 'Initial payment must be less than total.',
+        });
       } else {
         const updatedFormErrors = formErrors;
         delete updatedFormErrors[id];
